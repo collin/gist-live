@@ -1,0 +1,6 @@
+!!!
+%html
+  %head
+    %script{:src=>"/static/Orbited.js"}
+    %script{:src=>"/legs.js"}
+    :javascript

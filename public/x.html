@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <script src='http://localhost:4567/json2.js'></script>
+    <script type='text/javascript'>
+      //<![CDATA[
+        var message = window.name
+        if(message) {
+          var rpc = JSON.parse(message);
+          if(rpc.method) {
+            parent.frames[0]["Legs"][rpc['method']].apply(null, rpc['args']);
+          }
+        }
+        
+        window.name = "";
+        if(parent.frames[0].passbacks.length > 0) {
+          window.name = JSON.stringify(parent.frames[0].passbacks);
+          parent.frames[0].passbacks = []
+        }
+        
+        window.location = "http://gist.github.com/images/modules/header/logo_gist.png";
+      //]]>
+    </script>
+  </head>
+</html>

@@ -1,0 +1,10 @@
+%style
+  :sass
+    #gist-live-welcome
+      :background-color #fcc
+      :padding 20px
+
+#gist-live-welcome
+  %h1 Welcome to github Live-Edit
+  %p
+    %sub *not affiliated with github
