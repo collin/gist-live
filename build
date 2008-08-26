@@ -1,0 +1,67 @@
+require 'rubygems'
+require 'jabs'
+require 'sass'
+require 'haml'
+require 'continuous_builder'
+require 'pathname'
+
+class Pathname
+  alias / +
+  alias old_initialize initialize
+  def initialize path
+    old_initialize(path.to_s)
+  end
+end
+
+$dir = Pathname.new(__FILE__).dirname
+
+
+class GistLiveContinuousBuilder < ContinuousBuilder
+  watches :jabs,
+    :files => "./src/**/*.js.jabs",
+    :module => Jabs,
+    :update => :repack
+  
+  watches :haml,
+    :files => "./src/**/*.html.haml",
+    :module => Haml,
+    :update => :repack
+
+  watches :public_haml,
+    :files => "./public/**/*.html.haml",
+    :module => Haml
+
+  watches :public_sass,
+    :files => "./public/**/*.css.sass",
+    :module => Sass
+
+  watches :edit_area_source,
+    :files => "./public/edit_area/*.js",
+    :update => :repack
+
+  def repack path
+    pack = []
+    pack << ($dir/'public'/'jquery-1.2.6.min.js').read
+    pack << ($dir/'public'/'json2.js').read
+    pack << ($dir/'jquery.center.js').read
+    pack << ($dir/'jquery.corner.js').read
+    pack << ($dir/'gradient-1.0'/'jquery.gradient.pack.js').read
+    pack << ($dir/'diff_match_patch'/'diff_match_patch.js').read
+    pack << ($dir/'public'/'edit_area'/'edit_area_full.js').read
+
+    Pathname.glob($dir/'src'/'*.html').each do |path|
+      pack << "var #{path.basename.to_s.gsub('.html', '')} = jQuery(\"#{path.read.gsub("\n", '')}\")"
+    end
+
+    pack << ($dir/'src'/'gist_live.js').read
+    
+    path = $dir/'public'/'embedded.js'
+    f= File.open(path, 'w')
+    f.write(pack.join("\n"))
+    f.close
+  end
+end
+
+builder = GistLiveContinuousBuilder.new
+builder.build_all
+builder.build_continuously
