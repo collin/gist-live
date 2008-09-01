@@ -1,2 +1,0 @@
-%span.gist-live-edit-link
-  %a{:href=>"#"} Edit Live

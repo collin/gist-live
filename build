@@ -4,6 +4,10 @@ require 'sass'
 require 'haml'
 require 'continuous_builder'
 require 'pathname'
+require 'ruby2ruby'
+
+$-w = nil
+$-v = nil
 
 class Pathname
   alias / +
@@ -15,6 +19,21 @@ end
 
 $dir = Pathname.new(__FILE__).dirname
 
+class Sexp
+  def first_of_type t
+    detected = []
+    self.each do |elem|
+      if elem.is_a? Sexp
+        if elem.first == t
+          detected = elem
+        else
+          detected = elem.first_of_type t
+        end
+      end
+    end
+    detected
+  end
+end
 
 class GistLiveContinuousBuilder < ContinuousBuilder
   watches :jabs,
@@ -39,26 +58,48 @@ class GistLiveContinuousBuilder < ContinuousBuilder
     :files => "./public/edit_area/*.js",
     :update => :repack
 
-  def repack path
+  def pack
     pack = []
-    pack << ($dir/'public'/'jquery-1.2.6.min.js').read
-    pack << ($dir/'public'/'json2.js').read
-    pack << ($dir/'jquery.center.js').read
-    pack << ($dir/'jquery.corner.js').read
-    pack << ($dir/'gradient-1.0'/'jquery.gradient.pack.js').read
-    pack << ($dir/'diff_match_patch'/'diff_match_patch.js').read
-    pack << ($dir/'public'/'edit_area'/'edit_area_full.js').read
+    pack << ($dir/'vendor'/'jquery-1.2.6.min.js').read
+    pack
+  end
 
-    Pathname.glob($dir/'src'/'*.html').each do |path|
-      pack << "var #{path.basename.to_s.gsub('.html', '')} = jQuery(\"#{path.read.gsub("\n", '')}\")"
+  def repack_mod mod, &block
+    mod_pack = pack
+    
+    Pathname.glob($dir/'src'/mod/'*.html').each do |path|
+      script = "var #{path.basename.to_s.gsub('.html', '')}" 
+      script << "= jQuery(\"#{path.read.gsub("\n", '')}\");"
+      mod_pack << script 
     end
 
-    pack << ($dir/'src'/'gist_live.js').read
-    
-    path = $dir/'public'/'embedded.js'
+    specifics = []
+    specifics.instance_eval &block
+    specifics.each do |script| 
+      mod_pack << ($dir/script).read
+    end    
+        
+    path = $dir/'public'/"#{mod}.js"
     f= File.open(path, 'w')
-    f.write(pack.join("\n"))
+    f.write(mod_pack.join(";\n\n"))
     f.close
+  end
+
+  def repack path
+    repack_mod :embedded do
+      push 'vendor/jquery.center.js'
+      push 'vendor/jquery.corner.js'
+      push 'vendor/gradient-1.0/jquery.gradient.pack.js'
+      push 'src/embedded/gist_live.js'
+    end
+    
+    repack_mod :editor do
+      push  'vendor/diff_match_patch/diff_match_patch.js'
+  # Needs to load files as it goes    
+      push  'public/edit_area/edit_area_full.js'
+      push  'vendor/Orbited.js'
+      push  'public/legs.js'
+    end
   end
 end
 
