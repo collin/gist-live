@@ -1,0 +1,24 @@
+!!!
+%html
+  %head
+    %style
+      :sass
+        body, html
+          :border 0
+          :margin 0
+          :overflow hidden
+        textarea, body, html
+          :width 100%
+          :height 100%
+          :border none
+        #container
+          :width auto !important
+    %script{:src=>'http://localhost:4567/editor.js'}
+    :javascript
+      document.write('<textarea id="editarea">'+window.name+'</textarea>');
+      editAreaLoader.init({
+        id : "editarea"		// textarea id
+        ,syntax: "ruby"			// syntax to be uses for highgliting
+        ,start_highlight: true		// to display with highlight mode on start-up
+        ,toolbar: "search, go_to_line, undo, redo, change_smooth_selection, reset_highlight, highlight, help, save, syntax_selection"
+      })

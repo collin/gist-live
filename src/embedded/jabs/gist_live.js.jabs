@@ -1,0 +1,55 @@
+def gist_text
+  var map = $this.parents('.file').find('.highlight .line').map(function(){
+    return jQuery(this).text()
+  })
+  var text = ([]).join.call(map, "\n")
+  return text
+
+fun edit_link_events
+  var $this = edit_link
+  :click
+    var gist_text = $this.gist_text()
+    $#gist_data
+      .prepend(live_edit_panel)
+      frames[0].name = gist_text
+      live_edit_panel.attr({
+        src: 'http://localhost:8001//editor.html'
+        ,id: 'live-edit-panel'
+      })
+edit_link_events()
+
+fun append_live_edit_tools
+  var $this = $(this) 
+  .append(edit_link.clone(true))
+
+$body
+  .append(welcome_dialog)
+  .prepend(styles)
+  &#files .actions
+    .each(append_live_edit_tools)  
+    
+$#gist-live-welcome
+  .hide()
+  .center()
+
+  .gradient({ 
+    from: '003366'
+    ,to: '333333' 
+    ,position:'bottom'
+  })
+  
+  &.gradient
+    .css('opacity', 0.05)
+    
+  .corner('wicked 20px')
+  
+  fun and_remove
+    .remove()
+    
+  fun hide_welcome
+    .fadeOut(3000, and_remove)
+
+  .fadeIn(1000, hide_welcome)
+
+  $#gist-live-welcome :hidden
+    .css('display', '')
