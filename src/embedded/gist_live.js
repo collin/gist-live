@@ -5,14 +5,20 @@ jQuery.fn.gist_text = function() {
   var text = ([]).join.call(map, "\n");
   return text
 };
+jQuery.fn.gist_filename = function() {
+  var $this = this;
+  return $this.parents('.file').find('.info span').text();
+};
 function edit_link_events() {
   var $this = edit_link
   $this.bind("click", function(e) {
     var $this = jQuery(this);
     var gist_text = $this.gist_text();
+    var filename = $this.gist_filename();
     (function($this) {
       $this.prepend(live_edit_panel);
-      frames[0].name = gist_text
+      frames[0].name = JSON.stringify({text: gist_text,filename: filename
+      });
       live_edit_panel.attr({src: 'http://localhost:8001//editor.html',id: 'live-edit-panel'
       });
 })(jQuery("#gist_data"));

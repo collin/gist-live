@@ -58,9 +58,14 @@ class GistLiveContinuousBuilder < ContinuousBuilder
     :files => "./public/edit_area/*.js",
     :update => :repack
 
+  watches :legs,
+    :files => "./public/legs.js",
+    :update => :repack
+
   def pack
     pack = []
     pack << ($dir/'vendor'/'jquery-1.2.6.min.js').read
+    pack << ($dir/'vendor'/'json2.js').read
     pack
   end
 

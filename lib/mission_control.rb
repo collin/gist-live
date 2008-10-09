@@ -4,32 +4,28 @@ require 'uuid'
 require 'ostruct'
 
 Legs.start do
-  def initialize
-    @documents = {}
-    @editors = {}
-    @owners = {}
-  end
-
   def begin_editing data, file_name
     document = OpenStruct.new :name => file_name,
-      :id => UUID.new, :data => data
+      :uuid => UUID.new, :data => data
     
-    @documents[document.id] = document
-    @editors[document.id] = [self]
-    @owners[document.id] = self
+    @documents[document.uuid] = document
+    @editors[document.uuid] = [@caller]
+    @owners[document.uuid] = @caller
     
-    document
+    @caller.notify! :uuid, document.uuid
+    true
   end
 
-  def also_edit document_id
+  def also_editing document_id
     document = @documents[document_id]
-    @editors[document_id] << self
-    document
+    @editors[document_id] << @caller
+    @caller.notify! :edit, document.send(:table)
+    true
   end
   
   def stop_editing document_id, reason="saved"
-    return false unless @owners[document_id] == self
-    for editor in @editors[document_id] - [self]
+    return :false unless @owners[document_id] == @caller
+    for editor in (@editors[document_id] - [@caller])
       editor.notify!(:stopped, reason)
     end
     true
@@ -37,13 +33,24 @@ Legs.start do
   
   
   def diff document_id, patch
-    for editor in @editors[document_id] - [self]
-      editor.notify! :patch, patch
+    for editor in @editors[document_id]
+      if editor == @caller
+        @caller.notify! :info, "patching remotely"
+      else
+        editor.notify! :patch, patch
+      end
     end
-    true
+    'diffed'
   end
   
   private
+
+  def initialize
+    @documents = {}
+    @editors = {}
+    @owners = {}
+  end
+
   def log?; true end
 end
 

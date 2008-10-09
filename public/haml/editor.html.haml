@@ -15,10 +15,47 @@
           :width auto !important
     %script{:src=>'http://localhost:4567/editor.js'}
     :javascript
-      document.write('<textarea id="editarea">'+window.name+'</textarea>');
+      if(name) {
+        var gist = JSON.parse(name);
+        document.write('<textarea id="editarea">'+gist.text+'</textarea>');
+      }
+      else {
+        document.write('<textarea id="editarea"></textarea>');
+      }
+      
+      var dmp = new diff_match_patch();
+      var last_value;
+      
+      function watch_editarea() {  
+        if(location.hash) {
+          uuid = location.hash.slice(1);
+          Legs.also_editing(uuid)
+        }
+      
+        if(!window.uuid) {
+          Legs.begin_editing(gist.text, gist.filename)
+        }
+        
+        var area = jQuery('#frame_editarea').contents().find('textarea')
+        last_value = editAreaLoader.getValue('editarea') 
+        var current, patch;
+        function patch_loop() {        
+          current = editAreaLoader.getValue('editarea')
+          patch = dmp.patch_make(last_value, current)
+          patch = dmp.patch_toText(patch)
+          if(patch) Legs.diff(window.uuid, patch)
+          last_value = current
+          setTimeout(patch_loop, 1000)
+        }
+        patch_loop()
+      }
+      
       editAreaLoader.init({
         id : "editarea"		// textarea id
         ,syntax: "ruby"			// syntax to be uses for highgliting
         ,start_highlight: true		// to display with highlight mode on start-up
-        ,toolbar: "search, go_to_line, undo, redo, change_smooth_selection, reset_highlight, highlight, help, save, syntax_selection"
+        ,toolbar: "search, go_to_line.find('#textarea'), undo, redo, change_smooth_selection, reset_highlight, highlight, help, save, syntax_selection"
+        ,allow_toggle: false
+        ,EA_load_callback: 'watch_editarea'
       })
+  %body
