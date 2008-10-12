@@ -7,6 +7,9 @@ Step two: Install gem dependencies
 sudo gem sources -a http://gems.github.com
 sudo gem install Bluebie-legs uuid pathname ostruct
 
+Step three:  Edit configuration file
+Go to config/orbited.cfg, find INDEX under [static], and modify the path for your filesystem
+
 run
 
 ruby web.rb
