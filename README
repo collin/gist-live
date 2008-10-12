@@ -1,5 +1,13 @@
 This app was hacked together as a quick example for a presentation. Other use may be treacherous.
 
+It uses:
+
+http://code.google.com/p/google-diff-match-patch/
+http://orbited.org
+http://github.com/bmizerany/sinatra/tree/master
+http://www.cdolivet.net/editarea/
+http://github.com/Bluebie/legs/tree/master
+
 Step one: Install orbited
 http://orbited.org/wiki/Installation
 
