@@ -1,4 +1,4 @@
-require 'gen'
+require 'lib/gen'
 require 'legs'
 require 'uuid'
 require 'johnson'
