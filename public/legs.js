@@ -1,4 +1,4 @@
-jQuery(function(){
+jQuery(function(_){
   Legs = (function(socket){
 
     var remoteMethods = {
@@ -10,14 +10,20 @@ jQuery(function(){
         editAreaLoader.setValue('editarea', patched)
       }
       ,uuid: function(uuid) {
-        console.log(window.location+'#'+uuid)
-        window.uuid = uuid;
+        url = window.location+'#'+uuid;
+        _.live_url = url;
+
+        setTimeout(function(){
+          _('body iframe').contents().find('#toolbar_1').html(url);
+        }, 300);
+        
+        _.uuid = uuid;
       }
       ,edit: function(document) {
         editAreaLoader.setValue('editarea', document.data)
       }
       ,info: function() {
-        console.info(arguments)
+        //console.info(arguments)
       }
     };
 
@@ -57,7 +63,15 @@ jQuery(function(){
       })
     };
 
-    socket.open('localhost', '30274');
+    function connect() {
+      socket.open('localhost', '30274');
+    }
+    connect();
+    
+    socket.onclose = function() {
+      connect();
+      socket.do_send('reconnect');
+    };
 
     return {
       begin_editing: function(data, file_name) {

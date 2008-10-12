@@ -24,6 +24,9 @@ fun edit_link_events
         src: 'http://localhost:8001//editor.html'
         ,id: 'live-edit-panel'
       })
+    $.url
+      .html(window.live_url)
+      
 edit_link_events()
 
 fun append_live_edit_tools

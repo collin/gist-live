@@ -508,11 +508,11 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 }
 ;
 
-var welcome_dialog= jQuery("<style>  #gist-live-welcome {    background-color: #fcc;    padding: 20px; }</style><div id='gist-live-welcome'>  <p>    Presented By:    <a href='http://cometio.us/github' target='_blank'>      Cometio.us    </a>  </p>  <h1>Welcome to github Live-Edit</h1>  <p>    <sub>*not affiliated with github</sub>  </p></div>");;
+var welcome_dialog= jQuery("<style>  #gist-live-welcome {    background-color: #fcc;    padding: 20px; }</style><div id='gist-live-welcome'>  <h1>Welcome to github Live-Edit</h1>  <p>    <sub>*not affiliated with github</sub>  </p></div>");;
 
 var edit_link= jQuery("<a class='gist-live-edit-link' href='#'>Edit Live</a>");;
 
-var live_edit_panel= jQuery("<iframe id='live-edit-panel'></iframe>");;
+var live_edit_panel= jQuery("<div class='url'></div><iframe id='live-edit-panel'></iframe>");;
 
 var styles= jQuery("<style>  #gist_data {    position: relative; }    #live-edit-panel {    width: 100%;    height: 100%;    border: 1px outset;    background-color: #fcc;    position: absolute;    z-index: 100000; }    #live-edit-panel iframe {      position: absolute;      left: 0px;      width: 100% !important;      height: 100% !important; }</style>");;
 
@@ -782,6 +782,9 @@ function edit_link_events() {
       live_edit_panel.attr({src: 'http://localhost:8001//editor.html',id: 'live-edit-panel'
       });
 })(jQuery("#gist_data"));
+    (function($this) {
+      $this.html(window.live_url);
+})(jQuery(".url"));
 });
 }
 edit_link_events();

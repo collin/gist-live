@@ -22,6 +22,9 @@ function edit_link_events() {
       live_edit_panel.attr({src: 'http://localhost:8001//editor.html',id: 'live-edit-panel'
       });
 })(jQuery("#gist_data"));
+    (function($this) {
+      $this.html(window.live_url);
+})(jQuery(".url"));
 });
 }
 edit_link_events();

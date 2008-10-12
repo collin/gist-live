@@ -1,6 +1,8 @@
+#! /usr/bin/ruby
 require 'rubygems'
 require 'jabs'
 require 'sass'
+require 'sass/plugin'
 require 'haml'
 require 'continuous_builder'
 require 'pathname'
@@ -18,22 +20,6 @@ class Pathname
 end
 
 $dir = Pathname.new(__FILE__).dirname
-
-class Sexp
-  def first_of_type t
-    detected = []
-    self.each do |elem|
-      if elem.is_a? Sexp
-        if elem.first == t
-          detected = elem
-        else
-          detected = elem.first_of_type t
-        end
-      end
-    end
-    detected
-  end
-end
 
 class GistLiveContinuousBuilder < ContinuousBuilder
   watches :jabs,

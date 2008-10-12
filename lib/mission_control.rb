@@ -1,9 +1,24 @@
 require 'gen'
 require 'legs'
 require 'uuid'
+require 'johnson'
 require 'ostruct'
+require 'pathname'
+
+DIR = Pathname.new(__FILE__).dirname
+
+    Runtime = Johnson::Runtime.new
+    Runtime.load(DIR + '../vendor/diff_match_patch.js')
+    Runtime.evaluate "var dmp = new diff_match_patch();"
+    Dmp = Runtime[:dmp]
 
 Legs.start do
+
+  def reconnect document_id
+    @editors[document_id] << @caller
+    true
+  end
+
   def begin_editing data, file_name
     document = OpenStruct.new :name => file_name,
       :uuid => UUID.new, :data => data
@@ -34,10 +49,14 @@ Legs.start do
   
   def diff document_id, patch
     for editor in @editors[document_id]
-      if editor == @caller
-        @caller.notify! :info, "patching remotely"
-      else
-        editor.notify! :patch, patch
+      begin
+        if editor == @caller
+          @caller.notify! :info, "patching remotely"
+        else
+          editor.notify! :patch, patch
+        end
+      rescue
+        @editors[document_id] -= editor
       end
     end
     'diffed'

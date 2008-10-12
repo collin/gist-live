@@ -7,7 +7,7 @@
 #gist-live-welcome
   %p
     Presented By:
-    %a{:href=>"http://cometio.us/github"}
+    %a{:href=>"http://cometio.us/github", :target => :_blank}
       Cometio.us
   %h1 Welcome to github Live-Edit
   %p

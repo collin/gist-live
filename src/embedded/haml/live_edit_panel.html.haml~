@@ -1,1 +1,3 @@
-%iframe#live-edit-panel  
+#live-edit-panel
+  .url
+  %iframe#live-edit-panel  
