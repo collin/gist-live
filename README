@@ -3,9 +3,13 @@ This app was hacked together as a quick example for a presentation. Other use ma
 Step one: Install orbited
 http://orbited.org/wiki/Installation
 
+Step two: Install gem dependencies
+sudo gem sources -a http://gems.github.com
+sudo gem install Bluebie-legs uuid
+
 run
 
-ruby app.rb
+ruby web.rb
 ruby lib/mission_control.rb
 orbited --config=config/orbited.cfg
 
