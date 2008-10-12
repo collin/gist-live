@@ -1,16 +1,8 @@
 require 'lib/gen'
 require 'legs'
 require 'uuid'
-require 'johnson'
 require 'ostruct'
 require 'pathname'
-
-DIR = Pathname.new(__FILE__).dirname
-
-    Runtime = Johnson::Runtime.new
-    Runtime.load(DIR + '../vendor/diff_match_patch.js')
-    Runtime.evaluate "var dmp = new diff_match_patch();"
-    Dmp = Runtime[:dmp]
 
 Legs.start do
 
