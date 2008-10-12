@@ -5,7 +5,7 @@ http://orbited.org/wiki/Installation
 
 Step two: Install gem dependencies
 sudo gem sources -a http://gems.github.com
-sudo gem install Bluebie-legs uuid
+sudo gem install Bluebie-legs uuid pathname ostruct
 
 run
 
