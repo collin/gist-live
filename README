@@ -1,0 +1,26 @@
+This app was hacked together as a quick example for a presentation. Other use may be treacherous.
+
+Step one: Install orbited
+http://orbited.org/wiki/Installation
+
+run
+
+ruby app.rb
+ruby lib/mission_control.rb
+orbited --config=config/orbited.cfg
+
+Get the bookmarklet
+http://localhost:4567/index.html
+
+Go to a gist:
+
+http://gist.github.com/gists
+
+Click the bookmarklet.
+
+Click one of the new "edit live" links
+
+Open the url at the top of the edit area into another browser.
+
+(find bugs)
+
