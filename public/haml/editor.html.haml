@@ -28,22 +28,23 @@
       
       function watch_editarea() {  
         if(location.hash) {
-          uuid = location.hash.slice(1);
-          Legs.also_editing(uuid)
+          Legs.uuid = location.hash.slice(1);
+          Legs.also_editing(Legs.uuid)
         }
-      
-        if(!window.uuid) {
+        else if(!window.uuid) {
           Legs.begin_editing(gist.text, gist.filename)
         }
         
         var area = jQuery('#frame_editarea').contents().find('textarea')
         last_value = editAreaLoader.getValue('editarea') 
         var current, patch;
-        function patch_loop() {        
+        function patch_loop() {
           current = editAreaLoader.getValue('editarea')
           patch = dmp.patch_make(last_value, current)
           patch = dmp.patch_toText(patch)
-          if(patch) Legs.diff(window.uuid, patch)
+          if(patch) {
+            Legs.diff(Legs.uuid, patch)
+          }
           last_value = current
           setTimeout(patch_loop, 1000)
         }

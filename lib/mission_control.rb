@@ -13,7 +13,7 @@ Legs.start do
 
   def begin_editing data, file_name
     document = OpenStruct.new :name => file_name,
-      :uuid => UUID.new, :data => data
+      :uuid => UUID.generate, :data => data
     
     @documents[document.uuid] = document
     @editors[document.uuid] = [@caller]

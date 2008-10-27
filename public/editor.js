@@ -3063,6 +3063,8 @@ jQuery(function(_){
       ,uuid: function(uuid) {
         url = window.location+'#'+uuid;
         _.live_url = url;
+        Legs.uuid = uuid;
+        console.log("Legs: ", Legs);
 
         setTimeout(function(){
           _('body iframe').contents().find('#toolbar_1').html(url);
